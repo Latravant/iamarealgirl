@@ -422,18 +422,18 @@ function init_gear_sets()
     sets.midcast['Blue Magic'].Magical = {
 	    main={ name="Nibiru Cudgel", augments={'MP+50','INT+10','"Mag.Atk.Bns."+15',}},
 		sub={ name="Nibiru Cudgel", augments={'MP+50','INT+10','"Mag.Atk.Bns."+15',}},
-		ammo="Ghastly Tathlum",
+	    ammo="Ghastly Tathlum",
 		head="Jhakri Coronal +2",
-		body="Ayanmo Corazza +2",
-		hands="Jhakri Cuffs +2",
-		legs="Jhakri Slops +2",
-		feet="Jhakri Pigaches +2",
-		neck="Eddy Necklace",
-		waist="Eschan Stone",
+		body="Amalric Doublet +1",
+		hands="Amalric Gages +1",
+		legs={ name="Luhlaza Shalwar +1", augments={'Enhances "Assimilation" effect',}},
+		feet={ name="Amalric Nails", augments={'Mag. Acc.+15','"Mag.Atk.Bns."+15','"Conserve MP"+6',}},
+		neck="Sanctity Necklace",
+		waist="Salire Belt",
 		left_ear="Friomisi Earring",
 		right_ear="Novio Earring",
-		left_ring="Arvina Ringlet +1",
-		right_ring="Acumen Ring",
+		left_ring="Shiva Ring",
+		right_ring="Shiva Ring",
 		back="Izdubar Mantle",}
 
     sets.midcast['Blue Magic'].Magical.Resistant = set_combine(sets.midcast['Blue Magic'].Magical,
@@ -444,8 +444,20 @@ function init_gear_sets()
 
     sets.midcast['Blue Magic'].MagicalChr = set_combine(sets.midcast['Blue Magic'].Magical)
 
-    sets.midcast['Blue Magic'].MagicalVit = set_combine(sets.midcast['Blue Magic'].Magical,
-        {ring1="Spiral Ring"})
+    sets.midcast['Blue Magic'].MagicalVit = {
+	    ammo="Ghastly Tathlum",
+    head="Jhakri Coronal +2",
+    body="Amalric Doublet +1",
+    hands="Amalric Gages +1",
+    legs={ name="Luhlaza Shalwar +1", augments={'Enhances "Assimilation" effect',}},
+    feet={ name="Amalric Nails", augments={'Mag. Acc.+15','"Mag.Atk.Bns."+15','"Conserve MP"+6',}},
+    neck="Sanctity Necklace",
+    waist="Salire Belt",
+    left_ear="Friomisi Earring",
+    right_ear="Novio Earring",
+    left_ring="Shiva Ring",
+    right_ring="Shiva Ring",
+    back="Izdubar Mantle",
 
     sets.midcast['Blue Magic'].MagicalDex = set_combine(sets.midcast['Blue Magic'].Magical)
 
@@ -551,7 +563,7 @@ function init_gear_sets()
     -- Sets to return to when not performing an action.
 
     -- Gear for learning spells: +skill and AF hands.
-    sets.Learning = set_combine(sets.engaged.dw, {    
+    sets.Learning = set_combine(sets.engaged.DW, {    
 	    ammo="Mavi Tathlum",
 		head={ name="Luh. Keffiyeh +2", augments={'Enhances "Convergence" effect',}},
 		body="Assim. Jubbah +1",
@@ -640,6 +652,8 @@ function init_gear_sets()
     -- EG: sets.engaged.Dagger.Accuracy.Evasion
     
     -- Normal melee group
+	sets.default_melee_weapons = {main="Naegling",sub="Almace",}
+	
     sets.engaged = {ammo="Hasty Pinion +1",
     head="Herculean helm",
     body={ name="Herculean Vest", augments={'Accuracy+18 Attack+18','"Triple Atk."+3','DEX+11','Accuracy+4','Attack+11',}},
@@ -786,19 +800,21 @@ function job_get_spell_map(spell, default_spell_map)
     end
 end
 
+function job_update(cmdParams, eventArgs)
+	update_combat_form()
+end
+
 -- Modify the default idle set after it was constructed.
 function customize_idle_set(idleSet)
     if player.mpp < 91 then
-        set_combine(idleSet, sets.latent_refresh)
+        idleSet = set_combine{sets.idle, sets.latent_refresh}
     end
+	
     return idleSet
 end
 
 -- Called by the 'update' self-command, for common needs.
 -- Set eventArgs.handled to true if we don't want automatic equipping of gear.
-function job_update(cmdParams, eventArgs)
-    update_combat_form()
-end
 
 function job_buff_change(buff, gain)
 
@@ -870,6 +886,15 @@ function determine_haste_group()
 
 end
 
+function customize_melee_set(meleeSet)
+
+	if player.equipment.sub == 'Almace' then	
+		meleeSet = sets.engaged.DW
+	end
+	
+	return meleeSet
+	
+end
 -- Handle notifications of general user state change.
 function job_state_change(stateField, newValue, oldValue)
     if stateField == 'Offense Mode' then
@@ -902,8 +927,9 @@ function display_current_job_state(eventArgs)
 end
 
 function job_update(cmdParams, eventArgs)
-update_combat_form()
+	update_combat_form()
 end
+
  
 function update_combat_form()
 -- Check for H2H or single-wielding
