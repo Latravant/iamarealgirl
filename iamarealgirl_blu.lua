@@ -1,26 +1,6 @@
 -------------------------------------------------------------------------------------------------------------------
 -- Setup functions for this job.  Generally should not be modified.
 -------------------------------------------------------------------------------------------------------------------
--- <slot01>cocoon</slot01> def - crawlers
--- <slot02>tail slap</slot02>  stp - merrows arrapago reef
--- <slot03>sickle slash</slot03> - STP - spiders aby mis coast
--- <slot04>diffusion ray</slot04> STP bonus - Chariots aby uleguerand #07
--- <slot05>anvil lightning</slot05> ACC bonus -  Escalent (ungeweder type = green/blue)
--- <slot06>empty thrash</slot06> Da/Ta - craver promy mea
--- <slot07>erratic flutter</slot07>
--- <slot08>fantod</slot08> - stp (also attack buff) - hippogryph in risenjima
--- <slot09>delta thrust</slot09> DW - peiste in aby mis coast #07
--- <slot10>white wind</slot10> regen trait - puk (Waugyl) in aby altepa
--- <slot11>barrier tusk</slot11> DT - olyphant aby uleguerant 
--- <slot12>nat. meditation</slot12> acc bonus (attk boost when used) - chapuli in risenjima
--- <slot13>sudden lunge</slot13> stp - ladybug aby altepa #01 or #03
--- <slot14>thrashing assault</slot14>
--- <slot15>vanity dive</slot15>
--- <slot16>barbed crescent</slot16>
--- <slot17>disseverment</slot17>
--- <slot18>molting plumage</slot18>
--- <slot19>occultation</slot19>
--- <slot20>heavy strike</slot20>
 -- Initialization function for this job file.
 
 function get_sets()
@@ -41,7 +21,7 @@ function job_setup()
     state.Buff.Efflux = buffactive.Efflux or false
     
     state.Buff['Unbridled Learning'] = buffactive['Unbridled Learning'] or false
-    state.SkillMode = M{['description']='Skill Mode', 'Normal', 'On'}
+
     
     include('Mote-TreasureHunter')
     state.TreasureMode:set('None')
@@ -244,6 +224,8 @@ function user_unload()
     send_command('unbind @`')
     send_command('unbind @f9')
 	send_command('unbind PAGEUP')
+	
+	windower.send_command('sta !packets')
 end
 
 
@@ -316,7 +298,7 @@ function init_gear_sets()
 		left_ring="Karieyh Ring",})
 
     -- Specific weaponskill sets.  Uses the base set if an appropriate WSMod version isn't found.
-    sets.precast.WS['Requiescat'] ={    
+    sets.precast.WS['Requiescat'] = {    
 		ammo="Quartz Tathlum +1",
 		head={ name="Carmine Mask", augments={'MP+60','INT+10','MND+10',}},
 		body="Vanir Cotehardie",
@@ -429,19 +411,19 @@ function init_gear_sets()
 		back={ name="Rosmerta's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Attack+10','Weapon skill damage +10%','System: 1 ID: 640 Val: 4',}},    }
 
     sets.midcast['Blue Magic'].PhysicalAcc = {
-    ammo="Hasty Pinion +1",
-    head="Aya. Zucchetto +2",
-    body={ name="Herculean Vest", augments={'Accuracy+18 Attack+18','"Triple Atk."+3','DEX+11','Accuracy+4','Attack+11',}},
-    hands="Aya. Manopolas +2",
-    legs="Aya. Cosciales +2",
-    feet={ name="Rawhide Boots", augments={'STR+10','Attack+15','"Store TP"+5',}},
-    neck="Sanctity Necklace",
-    waist="Grunfeld Rope",
-    left_ear="Telos Earring",
-    right_ear="Odr Earring",
-    left_ring="Ilabrat Ring",
-    right_ring="Ramuh Ring",
-    back={ name="Rosmerta's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Attack+10','Weapon skill damage +10%','System: 1 ID: 640 Val: 4',}}
+		ammo="Hasty Pinion +1",
+		head="Aya. Zucchetto +2",
+		body={ name="Herculean Vest", augments={'Accuracy+18 Attack+18','"Triple Atk."+3','DEX+11','Accuracy+4','Attack+11',}},
+		hands="Aya. Manopolas +2",
+		legs="Aya. Cosciales +2",
+		feet={ name="Rawhide Boots", augments={'STR+10','Attack+15','"Store TP"+5',}},
+		neck="Sanctity Necklace",
+		waist="Grunfeld Rope",
+		left_ear="Telos Earring",
+		right_ear="Odr Earring",
+		left_ring="Ilabrat Ring",
+		right_ring="Ramuh Ring",
+		back={ name="Rosmerta's Cape", augments={'DEX+20','Accuracy+20 Attack+20','Attack+10','Weapon skill damage +10%','System: 1 ID: 640 Val: 4',}}
     }
 
     sets.midcast['Blue Magic'].PhysicalStr = set_combine(sets.midcast['Blue Magic'].Physical, {
@@ -564,17 +546,18 @@ function init_gear_sets()
     sets.midcast.Refresh = set_combine(sets.midcast['Blue Magic'].MagicAccuracy, {
         head="Amalric Coif"
     })
+	
     sets.midcast['Blue Magic'].Buff = {
-	ammo="Mavi Tathlum",
-    head={ name="Luh. Keffiyeh +2", augments={'Enhances "Convergence" effect',}},
-    body="Assim. Jubbah +1",
-    legs="Hashishin Tayt +1",
-    feet={ name="Luhlaza Charuqs +2", augments={'Enhances "Diffusion" effect',}},
-    neck="Mirage Stole +1",
-    right_ear="Njordr Earring",
-    left_ring="Stikini Ring +1",
-    right_ring="Stikini Ring +1",
-    back={ name="Cornflower Cape", augments={'MP+15','DEX+2','Accuracy+3','Blue Magic skill +10',}},
+		ammo="Mavi Tathlum",
+		head={ name="Luh. Keffiyeh +2", augments={'Enhances "Convergence" effect',}},
+		body="Assim. Jubbah +1",
+		legs="Hashishin Tayt +1",
+		feet={ name="Luhlaza Charuqs +2", augments={'Enhances "Diffusion" effect',}},
+		neck="Mirage Stole +1",
+		right_ear="Njordr Earring",
+		left_ring="Stikini Ring +1",
+		right_ring="Stikini Ring +1",
+		back={ name="Cornflower Cape", augments={'MP+15','DEX+2','Accuracy+3','Blue Magic skill +10',}},
     }
     sets.midcast['Blue Magic']['Battery Charge'] = set_combine(sets.midcast['Blue Magic'].Buff, {
         head="Amalric Coif"
@@ -650,17 +633,6 @@ function init_gear_sets()
 		back="Solemnity Cape",
     }
 
-    sets.idle.PDT = set_combine(sets.idle, {
-        head="Malignance Chapeau",
-        neck="Twilight Torque",
-        ring1="Defending Ring",
-        hands="Malignance Gloves",
-        body="Malignance Tabard",
-        legs="Malignance Tights", 
-        feet="Malignance Boots"
-    })
-
-
 
     sets.idle.Learning = set_combine(sets.idle, sets.Learning)
 
@@ -683,19 +655,19 @@ function init_gear_sets()
     
     -- Normal melee group
     sets.engaged = {
-    ammo="Hasty Pinion +1",
-    head={ name="Adhemar Bonnet", augments={'AGI+10','Rng.Acc.+15','Rng.Atk.+15',}},
-    body={ name="Adhemar Jacket", augments={'STR+10','DEX+10','Attack+15',}},
-    hands={ name="Adhemar Wristbands", augments={'DEX+10','AGI+10','Accuracy+15',}},
-    legs="Aya. Cosciales +2",
-    feet={ name="Herculean Boots", augments={'"Triple Atk."+1','"Dual Wield"+2','"Store TP"+5','Mag. Acc.+17 "Mag.Atk.Bns."+17',}},
-    neck="Clotharius Torque",
-    waist="Twilight Belt",
-    left_ear="Eabani Earring",
-    right_ear="Suppanomimi",
-    left_ring="Hetairoi Ring",
-    right_ring="Epona's Ring",
-    back="Bleating Mantle",    }
+		ammo="Hasty Pinion +1",
+		head={ name="Adhemar Bonnet", augments={'AGI+10','Rng.Acc.+15','Rng.Atk.+15',}},
+		body={ name="Adhemar Jacket", augments={'STR+10','DEX+10','Attack+15',}},
+		hands={ name="Adhemar Wristbands", augments={'DEX+10','AGI+10','Accuracy+15',}},
+		legs="Aya. Cosciales +2",
+		feet={ name="Herculean Boots", augments={'"Triple Atk."+1','"Dual Wield"+2','"Store TP"+5','Mag. Acc.+17 "Mag.Atk.Bns."+17',}},
+		neck="Clotharius Torque",
+		waist="Twilight Belt",
+		left_ear="Eabani Earring",
+		right_ear="Suppanomimi",
+		left_ring="Hetairoi Ring",
+		right_ring="Epona's Ring",
+		back="Bleating Mantle",    }
 
     sets.engaged.Mid = set_combine(sets.engaged, {
         head="Adhemar Bonnet +1",
@@ -719,6 +691,7 @@ function init_gear_sets()
         neck="Twilight Torque",
         ring1="Defending Ring",
     })
+	
     sets.engaged.EVA = set_combine(sets.engaged, {
         head="Malignance Chapeau",
         body="Malignance Tabard",
@@ -728,6 +701,7 @@ function init_gear_sets()
         neck="Twilight Torque",
         ring1="Defending Ring",
     })
+	
     sets.engaged.Mid.PDT = set_combine(sets.engaged.Mid, {
         head="Nyame Helm",
         body="Nyame Mail",
@@ -738,6 +712,7 @@ function init_gear_sets()
         ring1="Defending Ring",
         ring2="Patricius Ring",
     })
+	
     sets.engaged.Mid.EVA = set_combine(sets.engaged.Mid, {
         head="Malignance Chapeau",
         body="Malignance Tabard",
@@ -748,6 +723,7 @@ function init_gear_sets()
         ring1="Defending Ring",
         ring2="Patricius Ring",
     })
+	
     sets.engaged.Acc.PDT = set_combine(sets.engaged.Mid.PDT, {
         head="Nyame Helm",
         body="Nyame Mail",
@@ -756,6 +732,7 @@ function init_gear_sets()
         feet="Nyame Sollerets",
         ring1="Defending Ring",
     })
+	
     sets.engaged.Acc.EVA = set_combine(sets.engaged.Mid.EVA, {
         head="Malignance Chapeau",
         body="Malignance Tabard",
@@ -767,9 +744,7 @@ function init_gear_sets()
 
     sets.engaged.Learning = set_combine(sets.engaged, sets.Learning)
 
-    
-    sets.engaged.MaxHaste = {
-	    ammo="Focal Orb",
+    sets.engaged.MaxHaste = { ammo="Focal Orb",
 		head={ name="Adhemar Bonnet", augments={'AGI+10','Rng.Acc.+15','Rng.Atk.+15',}},
 		body="Ayanmo Corazza +2",
 		hands={ name="Adhemar Wristbands", augments={'DEX+10','AGI+10','Accuracy+15',}},
@@ -781,12 +756,15 @@ function init_gear_sets()
 		right_ear="Telos Earring",
 		left_ring="Epona's Ring",
 		right_ring="Hetairoi Ring",
-		back="Bleating Mantle",
-     }
+		back="Bleating Mantle"}
+		
     sets.engaged.Learning = set_combine(sets.engaged, sets.Learning)
+	
 	sets.engaged.TH	= set_combine(sets.engaged,{ammo="Perfect lucky egg", head="White Rarab Cap +1",
 		waist="Chaac Belt",})
+
 	sets.dps = {main="Naegling", sub="Almace"}
+	
 	sets.dps.matt = {
 		main={ name="Colada", augments={'DEX+2','Mag. Acc.+7 "Mag.Atk.Bns."+7','"Treasure Hunter"+1',}},
 		sub={ name="Colada", augments={'Mag. Acc.+4 "Mag.Atk.Bns."+4','MND+7','"Mag.Atk.Bns."+20','DMG:+10',}},}
@@ -819,7 +797,6 @@ function job_precast(spell, action, spellMap, eventArgs)
             return
         end
     end
-
 end
 
 -- Run after the default midcast() is done.
@@ -843,11 +820,6 @@ function job_post_midcast(spell, action, spellMap, eventArgs)
     end
 end
 
-function job_aftercast(spell, action, spellMap, eventArgs)
-    if spell.name == 'Pollen' and state.SkillMode.value == 'On' then
-        windower.send_command('wait 3; input /ma "'..spell.name..'" '..spell.target.name)
-    end
-end
 -------------------------------------------------------------------------------------------------------------------
 -- Job-specific hooks for non-casting events.
 -------------------------------------------------------------------------------------------------------------------
@@ -866,6 +838,7 @@ function job_buff_change(buff, gain)
             handle_equipping_gear(player.status)
         end
     end
+	
     if buff:startswith('Aftermath') then
         if player.equipment.main == 'Tizona' then
             classes.CustomMeleeGroups:clear()
@@ -882,7 +855,6 @@ function job_buff_change(buff, gain)
     end
 
 end
-
 -------------------------------------------------------------------------------------------------------------------
 -- User code that supplements standard library decisions.
 -------------------------------------------------------------------------------------------------------------------
@@ -903,7 +875,7 @@ end
 -- Modify the default idle set after it was constructed.
 function customize_idle_set(idleSet)
     if player.mpp < 91 then
-        idleSet = set_combine{idleSet, sets.latent_refresh}
+		set_combine{sets.idle, sets.latent_refresh}
     end
 	
     return idleSet
@@ -986,10 +958,10 @@ function display_current_job_state(eventArgs)
 end
 
 function update_combat_form()
-    -- Check for H2H or single-wielding
-    --if player.equipment.sub == "Genbu's Shield" or player.equipment.sub == 'empty' then
-    --    state.CombatForm:reset()
-    --end
+    --Check for H2H or single-wielding
+    if player.equipment.sub == "Genbu's Shield" or player.equipment.sub == 'empty' then
+        state.CombatForm:reset()
+    end
 end
 
 -- Select default macro book on initial load or subjob change.
