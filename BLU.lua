@@ -45,11 +45,11 @@
 
 -- Initialization function for this job file.
 function get_sets()
-    -- Load and initialize the include file.
-	include('Sel-Include.lua')
-	include('organizer-lib')	
-end
 
+	-- Load and initialize the include file.
+	include('Sel-Include.lua')
+    include('organizer-lib')		
+end
 -- Setup vars that are user-independent.  state.Buff vars initialized here will automatically be tracked.
 function job_setup()
 
@@ -448,9 +448,10 @@ end
 
 -- Modify the default idle set after it was constructed.
 function job_customize_idle_set(idleSet)
+    
     if player.mpp < 51 and (state.IdleMode.value == 'Normal' or state.IdleMode.value:contains('Sphere')) then
 		if sets.latent_refresh then
-			idleSet = set_combine(idleSet, sets.latent_refresh)
+			idleSet = sets.idle.lowmp
 		end
 		
 		if (state.Weapons.value == 'None' or state.UnlockWeapons.value) and idleSet.main then
@@ -463,7 +464,7 @@ function job_customize_idle_set(idleSet)
     end
 	
 	if state.LearningMode.value == true then 
-		idleSet = set_combine(idleSet, sets.Learning)
+		idleSet = sets.Learning
 	end
 	
     return idleSet
@@ -594,92 +595,6 @@ function check_buffup()
 		return false
 	end
 end
-
-function determine_haste_group()
-
-    classes.CustomMeleeGroups:clear()
-    -- assuming +4 for marches (ghorn has +5)
-    -- Haste (white magic) 15%
-    -- Haste Samba (Sub) 5%
-    -- Haste (Merited DNC) 10% (never account for this)
-    -- Victory March +0/+3/+4/+5    9.4/14%/15.6%/17.1% +0
-    -- Advancing March +0/+3/+4/+5  6.3/10.9%/12.5%/14%  +0
-    -- Embrava 30% with 500 enhancing skill
-    -- Mighty Guard - 15%
-    -- buffactive[580] = geo haste
-    -- buffactive[33] = regular haste
-    -- buffactive[604] = mighty guard
-    -- state.HasteMode = toggle for when you know Haste II is being cast on you
-    -- Hi = Haste II is being cast. This is clunky to use when both haste II and haste I are being cast
-    if state.HasteMode.value == 'Hi' then
-        if ( ( (buffactive[33] or buffactive[580] or buffactive.embrava) and (buffactive.march or buffactive[604]) ) or
-                ( buffactive[33] and (buffactive[580] or buffactive.embrava) ) or
-                ( buffactive.march == 2 and buffactive[604] ) ) then
-            add_to_chat(8, '-------------Max-Haste Mode Enabled--------------')
-            classes.CustomMeleeGroups:append('MaxHaste')
-        elseif ( ( buffactive[580] or buffactive[33] or buffactive.march == 2 ) or
-                ( buffactive.march == 1 and buffactive[604] ) ) then
-            add_to_chat(8, '-------------Haste 30%-------------')
-            classes.CustomMeleeGroups:append('Haste_30')
-        elseif ( buffactive.march == 1 or buffactive[604] ) then
-            add_to_chat(8, '-------------Haste 15%-------------')
-            classes.CustomMeleeGroups:append('Haste_15')
-        end
-    else
-        if ( buffactive[580] and ( buffactive.march or buffactive[33] or buffactive.embrava or buffactive[604]) ) or  -- geo haste + anything
-            ( buffactive.embrava and (buffactive.march or buffactive[33] or buffactive[604]) ) or  -- embrava + anything
-            ( buffactive.march == 2 and (buffactive[33] or buffactive[604]) ) or  -- two marches + anything
-            ( buffactive[33] and buffactive[604] and buffactive.march ) then -- haste + mighty guard + any marches
-            add_to_chat(8, '-------------Max Haste Mode Enabled--------------')
-            classes.CustomMeleeGroups:append('MaxHaste')
-        elseif ( buffactive.march == 2 ) or -- two marches from ghorn
-            ( (buffactive[33] or buffactive[604]) and buffactive.march == 1 ) or  -- MG or haste + 1 march
-            ( buffactive[580] ) or  -- geo haste
-            ( buffactive[33] and buffactive[604] ) then  -- haste with MG
-            add_to_chat(8, '-------------Haste 30%-------------')
-            classes.CustomMeleeGroups:append('Haste_30')
-        elseif buffactive[33] or buffactive[604] or buffactive.march == 1 then
-            add_to_chat(8, '-------------Haste 15%-------------')
-            classes.CustomMeleeGroups:append('Haste_15')
-        end
-    end
-
-end
-
-mov = {counter=0}
-if player and player.index and windower.ffxi.get_mob_by_index(player.index) then
-    mov.x = windower.ffxi.get_mob_by_index(player.index).x
-    mov.y = windower.ffxi.get_mob_by_index(player.index).y
-    mov.z = windower.ffxi.get_mob_by_index(player.index).z
-end
-
-moving = false
-windower.raw_register_event('prerender',function()
-    mov.counter = mov.counter + 1;
-    if mov.counter>15 then
-        local pl = windower.ffxi.get_mob_by_index(player.index)
-        if pl and pl.x and mov.x then
-            dist = math.sqrt( (pl.x-mov.x)^2 + (pl.y-mov.y)^2 + (pl.z-mov.z)^2 )
-            if dist > 1 and not moving then
-                state.Moving.value = true
-				send_command('gs c update')
-                send_command('gs equip sets.MoveSpeed')
-                moving = true
-				
-            elseif dist < 1 and moving then
-                state.Moving.value = false
-                send_command('gs c update')
-                moving = false
-            end
-        end
-        if pl and pl.x then
-            mov.x = pl.x
-            mov.y = pl.y
-            mov.z = pl.z
-        end
-        mov.counter = 0
-    end
-end)
 
 buff_spell_lists = {
 	Auto = {--Options for When are: Always, Engaged, Idle, OutOfCombat, Combat
